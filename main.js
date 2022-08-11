@@ -1,5 +1,6 @@
 import './style.css';
-import {apiKey} from './apikey.js';
+const apiKey = import.meta.env.VITE_API_KEY
+//import {apiKey} from './apikey.js';
 
 //this is my search function that executes when the user clicks the button
 const search = (ev) => {
