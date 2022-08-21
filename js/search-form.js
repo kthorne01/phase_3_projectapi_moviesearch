@@ -1,5 +1,11 @@
+// import apiKey from "./key.js";
+const apiKey = import.meta.env.VITE_API_KEY;
 export default class SearchForm {
-  constructor() {}
+
+  constructor(stateManager) {
+    //creating convenience variable to use it in other methods (initializing it)
+    this.stateManager = stateManager;
+  }
 
   drawform() {
     //job of method --> to display a form to the HTML
@@ -25,10 +31,44 @@ export default class SearchForm {
             <button id="go" type="submit">go</button>
         </form>
         `;
+    //putting . in front of form-container bc it is a class ID
+    //saying go out and find the html element that has a class...
+    //called form-container and set it's inner html to the formTemplate
+    document.querySelector(".form-container").innerHTML = formTemplate;
+    //submit, click, mouse-over are strings but this.search we want...
+    //it to be treated as a function and not a string so no quotes
+    document.querySelector("form").addEventListener("submit", this.search.bind(this));
   }
 
-  search() {
+  //this is invoked when user submits the form
+  //added ev argument in parameter to prevent the default browser functionality...
+  //bc I want it to do what I want it to do
+  search(ev) {
     //job of method --> to send search to the cloud (OMDB)
+    ev.preventDefault();
+    console.log("Search!");
+
+    const title = document.querySelector("#title").value;
+    const year = document.querySelector("#year").value;
+    const plot = document.querySelector("#plot").value;
+
+    //template literals (by using backtick) allows us to embed variables within our string
+    const url = `https://www.omdbapi.com/?t=${title}&y=${year}&plot=${plot}&apikey=${apiKey}`;
+
+    //const url = `https://www.omdbapi.com/?t=${title}&y=${year}&plot=full&apikey=${apiKey}`;
+
+    console.log(url);
+
+    //   below is fetching my data from the internet
+    fetch(url)
+      //callback function
+      .then((response) => response.json())
+      .then(((data) => {
+        console.log(data);
+        console.log(this);
+        //letting sm knw something has happened
+        this.stateManager.notify('found-movie', [data]);
+      }).bind(this));
   }
 
   displayResults() {
