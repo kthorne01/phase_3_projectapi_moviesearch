@@ -17,13 +17,33 @@ export default class StateManager {
     this.favorites = [];
     this.subscribers = [];
     this.searchMode = true;
-    this.showNotes = true;
+    this.showComments = false;
     this.database = new Database();
+    this.loadFavorites();
 
     //listening so that any time a "like-requested" event happens, it will call....
     //the "saveMovieToFavorites" method
     this.subscribe('like-requested', this.saveMovieToFavorites.bind(this));
+    this.subscribe('found-movie', this.setSearchResults.bind(this));
+    this.subscribe('favorites-loaded', this.setFavorites.bind(this));
+    this.subscribe('show-comments', this.toggleComments.bind(this));
   }
+
+  setSearchResults(movieDataList) {
+    this.searchResults = movieDataList;
+    this.movies = this.searchResults;
+  }
+
+  setFavorites(movieDataList) {
+    this.favorites = movieDataList;
+    this.movies = this.favorites;
+  }
+
+  toggleComments(val) {
+    this.showComments = val;
+    this.notify('redraw', this.movies);
+  }
+
 
   //A method to read a user's favorites from...
   //IndexedDB when the page first loads.
@@ -31,7 +51,13 @@ export default class StateManager {
     // reads from IndexDB and stores the...
     // data to "this.favorites." Then, notifies...
     // any interested components
+    const callback = function(movieDataList){
+      this.notify('favorites-loaded', movieDataList);
+    }
+    this.database.getAll(callback.bind(this));
   }
+
+
 
   //A method to add a new movie to the user's...
   //favorites and save it to IndexedDB.

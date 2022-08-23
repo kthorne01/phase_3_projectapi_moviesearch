@@ -31,6 +31,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   text-align: center;
+  background: yellow orange;
 }
 
 h1 {
@@ -64,6 +65,8 @@ h1 {
 .read-the-docs {
   color: #888;
 }
+
+
 
 .like {
   background-color: purple;
@@ -99,4 +102,15 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+textarea {
+  width: 100%;
+  min-height: 120px;
+}
+
+#show_comments{
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

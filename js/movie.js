@@ -4,6 +4,8 @@ export default class Movie {
   constructor(stateManager, movieData) {
     this.stateManager = stateManager;
     this.movieData = movieData;
+    //making notes not show by default
+    this.showComments = false;
   }
 
   attachMovieToDOM(parentElement) {
@@ -30,8 +32,23 @@ export default class Movie {
         <p>${data.Plot}</p>
 
         <button class="like" id="like_${data.imdbID}">Like</button>
+        ${this.getCommentsForm()}
       `;
     return movieTemplate;
+  }
+
+  getCommentsForm() {
+    if(this.stateManager.showComments) {
+      return `
+        <div>
+            <label>Comments</label>
+            // ||'' <== this is what got rid of the word "undefined" in the text box"
+            <textarea>${this.movieData.comments ||''}</textarea>
+        <div>    
+      `;
+    } else {
+        return '';
+    }
   }
 
   like() {

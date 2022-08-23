@@ -29,6 +29,8 @@ export default class SearchForm {
             <option value="full">Full</option>
             </select>
             <button id="go" type="submit">go</button>
+            <button id="reset">reset</button>
+            <button id="show-favorites">show-favorites</button>
         </form>
         `;
     //putting . in front of form-container bc it is a class ID
@@ -38,6 +40,8 @@ export default class SearchForm {
     //submit, click, mouse-over are strings but this.search we want...
     //it to be treated as a function and not a string so no quotes
     document.querySelector("form").addEventListener("submit", this.search.bind(this));
+    document.querySelector("#reset").addEventListener("click", this.clearScreen.bind(this));
+    document.querySelector('#show-favorites').addEventListener('click', this.loadFavorites.bind(this));
   }
 
   //this is invoked when user submits the form
@@ -71,7 +75,17 @@ export default class SearchForm {
       }).bind(this));
   }
 
-  displayResults() {
-    //job of method --> to display movie once the cloud responds
+  clearScreen(ev) {
+    ev.preventDefault();
+    document.querySelector("#title").value = "";
+    document.querySelector("#year").value = "";
+    // document.querySelector("#plot").value = "";
+
+    this.stateManager.notify("clear-all");
+  }
+
+  loadFavorites(ev) {
+    ev.preventDefault();
+    this.stateManager.loadFavorites();
   }
 }
