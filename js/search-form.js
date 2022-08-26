@@ -25,12 +25,14 @@ export default class SearchForm {
             <br />
             <label class="control-label" for="plot">Plot:</label>
             <select name="plot" id="plot" style="width: 100px;">
-            <option value="" selected="">Short</option>
-            <option value="full">Full</option>
+            <option value="" selected="">Short Summary</option>
+            <option value="full">Full Summary</option>
             </select>
-            <button id="go" type="submit">go</button>
-            <button id="reset">reset</button>
-            <button id="show-favorites">show-favorites</button>
+            <button id="go" type="submit">Search</button>
+            <div>
+            <button id="reset">Reset</button>
+            <button id="show-favorites">Show Favorites</button>
+            </div>
         </form>
         `;
     //putting . in front of form-container bc it is a class ID
@@ -56,8 +58,16 @@ export default class SearchForm {
     const year = document.querySelector("#year").value;
     const plot = document.querySelector("#plot").value;
 
+//************************************* */
+    let url = `https://www.omdbapi.com/?apikey=${apiKey}&t=${title}&plot=${plot}`;
+    // let url = `https://www.omdbapi.com/?s=${param}&apikey=${apiKey}`;
+    // let url = `https://www.omdbapi.com/?s=${param}&apikey=${apiKey}&t=${title}&plot=${plot}`;
+    if (year != '') {
+        url += `y=${year}`;
+    }
+////*************************************** */
     //template literals (by using backtick) allows us to embed variables within our string
-    const url = `https://www.omdbapi.com/?t=${title}&y=${year}&plot=${plot}&apikey=${apiKey}`;
+    //const url = `https://www.omdbapi.com/?t=${title}&y=${year}&plot=${plot}&apikey=${apiKey}`;
 
     //const url = `https://www.omdbapi.com/?t=${title}&y=${year}&plot=full&apikey=${apiKey}`;
 
@@ -66,14 +76,23 @@ export default class SearchForm {
     //   below is fetching my data from the internet
     fetch(url)
       //callback function
-      .then((response) => response.json())
-      .then(((data) => {
+      .then(response => response.json())
+      .then((data => {
         console.log(data);
         console.log(this);
         //letting sm knw something has happened
         this.stateManager.notify('found-movie', [data]);
       }).bind(this));
   }
+
+  // .then((response) => response.json())
+  //     .then(((data) => {
+  //       console.log(data);
+  //       console.log(this);
+  //       //letting sm knw something has happened
+  //       this.stateManager.notify('found-movie', [data]);
+  //     }).bind(this));
+  // }
 
   clearScreen(ev) {
     ev.preventDefault();

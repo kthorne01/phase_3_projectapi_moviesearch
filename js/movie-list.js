@@ -33,9 +33,9 @@ export default class MovieList {
       //document.querySelector(".movies").insertAdjacentHTML('beforeend', html);
     }
     //adding the show notes button to the top
-    let buttonText = "Show Comments";
+    let buttonText = "View Notes";
     if(this.stateManager.showComments) {
-      buttonText = "Hide Comments";
+      buttonText = "Hide Notes";
     }
 
     const buttonHTML = `<button id="show-comments">${buttonText}</button>`;

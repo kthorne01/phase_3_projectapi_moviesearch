@@ -15,7 +15,7 @@ export default class StateManager {
     this.movies = [];
     this.searhResults = [];
     this.favorites = [];
-    this.subscribers = [];
+    this.subscribers = []; //this is so my component can listen for changes to the state
     this.searchMode = true;
     this.showComments = false;
     this.database = new Database();
@@ -27,6 +27,11 @@ export default class StateManager {
     this.subscribe('found-movie', this.setSearchResults.bind(this));
     this.subscribe('favorites-loaded', this.setFavorites.bind(this));
     this.subscribe('show-comments', this.toggleComments.bind(this));
+
+//************************************************************************* */
+    this.subscribe('save-requested', this.saveMovieToFavorites.bind(this));
+
+//************************************************************************** */
   }
 
   setSearchResults(movieDataList) {
@@ -51,12 +56,14 @@ export default class StateManager {
     // reads from IndexDB and stores the...
     // data to "this.favorites." Then, notifies...
     // any interested components
-    const callback = function(movieDataList){
-      this.notify('favorites-loaded', movieDataList);
-    }
-    this.database.getAll(callback.bind(this));
-  }
 
+//***************************************************** */    
+    const callbackFunction = function(movieDataList){
+      this.notify('favorites-loaded', movieDataList);
+    };
+    this.database.getAll(callbackFunction.bind(this));
+  }
+//********************************************************* */
 
 
   //A method to add a new movie to the user's...
